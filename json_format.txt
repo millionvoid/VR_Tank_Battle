@@ -1,0 +1,63 @@
+{
+    "timestamp": long int,
+    "hand_count": 0,
+    "is_valid": bool,
+    "fps": float,
+    "id": long int
+}
+
+{
+    "timestamp": long int,
+    "hand_count": 1,
+    "is_valid": bool,
+    "fps": float,
+    "leftmost_hand": {
+        "wrist_position": list(3) of float,
+        "sphere_radius": float,
+        "palm_position": list(3) of float,
+        "fingers": list(5) of 
+            {
+                "bones": list(4) of list(2) of list(3) of float
+                "is_extended": bool,
+                "type": 0
+            }
+        ,
+        "is_right": bool,
+        "is_valid": bool,
+        "pinch_strength": float,
+        "grab_strength": float,
+        "palm_normal": list(3) of float,
+        "is_left": bool,
+        "palm_velocity": list(3) of float,
+        "sphere_center": list(3) of float,
+    },
+    "id": long int
+}
+{
+    "rightmost_hand": {
+        "wrist_position": list(3) of float,
+        "sphere_radius": float,
+        "palm_position": list(3) of float,
+        "fingers": list(5) of 
+            {
+                "bones": list(4) of list(2) of list(3) of float
+                "is_extended": bool,
+                "type": 0
+            }
+        ,
+        "is_right": bool,
+        "is_valid": bool,
+        "pinch_strength": float,
+        "grab_strength": float,
+        "palm_normal": list(3) of float,
+        "is_left": bool,
+        "palm_velocity": list(3) of float,
+        "sphere_center": list(3) of float,
+    },
+    "timestamp": long int,
+    "hand_count": 2,
+    "is_valid": bool,
+    "fps": float,
+    "leftmost_hand": same as "rightmost_hand",
+    "id": long int
+}

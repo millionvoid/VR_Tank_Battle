@@ -1,0 +1,7 @@
+{
+    "timestamp": 461062486309,
+    "is_valid": true,
+    "id": 21035,
+    "fps": 23.211231231689453,
+    "hand_count": 0
+}
