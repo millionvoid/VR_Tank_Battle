@@ -10,6 +10,6 @@ conn, addr = s.accept()
 print('Connected by', addr)
 while True:
     buffer = conn.recv(65536)
-    print buffer
+    print 'received len = ', len(buffer)
 conn.close()
 s.close()

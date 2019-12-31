@@ -68,8 +68,8 @@ def to_json(frame):
 			fingers.append(finger_dic)
 		rightmost_hand_dic["fingers"]=fingers
 		dic['rightmost_hand']=rightmost_hand_dic
-	return json.dumps(dic, indent=4) #nice to read
-	# return json.dumps(dic) #hard to read
+	# return json.dumps(dic, indent=4) #nice to read
+	return json.dumps(dic) #hard to read
 
 
 if __name__ == '__main__':
