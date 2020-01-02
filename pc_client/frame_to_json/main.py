@@ -4,7 +4,7 @@ controller = Leap.Controller()
 
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 7777        # Port to listen on (non-privileged ports are > 1023)
+PORT = 8888        # Port to listen on (non-privileged ports are > 1023)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -24,7 +24,7 @@ class LeapEventListener(Leap.Listener):
     def on_frame(self, controller):
         frame = controller.frame()
         buffer = frame_to_json.to_json(frame)
-        print len(buffer)
+        print '\r' + str(len(buffer)),
         s.sendall(buffer)
 
 
