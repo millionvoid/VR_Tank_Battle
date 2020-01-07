@@ -86,12 +86,20 @@ public class LeapMotionListener : MonoBehaviour {
         }
     }
 
+    private static Object getObjectByJson(string jsonString, Object obj)
+    {
+             //实例化DataContractJsonSerializer对象，需要待序列化的对象类型
+             DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+             //把Json传入内存流中保存
+             MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+             // 使用ReadObject方法反序列化成对象
+             return serializer.ReadObject(stream);
+    }
+    
     public Frame ParseReceiveData() {
-
         // TODO: convert this.receiveBuffer to Frame
-        JSONNode json = JSON.Parse(msgReceive);
-
-        return new Frame();
+        //JSONNode json = JSON.Parse(msgReceive);
+        return getObjectByJson(msgReceive, new Frame());
     }
 
 
