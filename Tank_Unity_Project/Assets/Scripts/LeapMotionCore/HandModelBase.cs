@@ -64,7 +64,7 @@ namespace Leap.Unity {
         void Update() {
             Debug.Log("Update() called");
 
-            Frame frame = leapMotionListener.CurrentFrame;
+            Frame frame = null; // leapMotionListener.CurrentFrame;
             Hand hand = null;
             if(frame != null) {
                 foreach (var h in frame.Hands) {

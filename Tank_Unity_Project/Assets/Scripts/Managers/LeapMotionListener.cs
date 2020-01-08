@@ -22,7 +22,7 @@ public class LeapMotionListener : MonoBehaviour {
 
     private const int BUFFER_SIZE = 8192;
     private byte[] receiveBuffer;
-    public Frame CurrentFrame { get; private set; }
+    public JSONNode data { get; private set; }
     
     private void Start() {
         ThreadStart serverRef = new ThreadStart(InitializeServer);
@@ -68,9 +68,8 @@ public class LeapMotionListener : MonoBehaviour {
             mut.WaitOne();
             //data = JSON.Parse(msgReceive);
             msgReceive = Encoding.ASCII.GetString(receiveBuffer, 0, count);
+            data = ParseReceiveData();
             mut.ReleaseMutex();
-
-            CurrentFrame = ParseReceiveData();
 
             //Debug.Log("fps = " + data["fps"]);
             //Debug.Log("client message length: " + msgReceive.Length);
@@ -86,13 +85,11 @@ public class LeapMotionListener : MonoBehaviour {
         }
     }
 
-    public Frame ParseReceiveData() {
+    public JSONNode ParseReceiveData() {
 
         // TODO: convert this.receiveBuffer to Frame
-        JSONNode json = JSON.Parse(msgReceive);
+        return JSON.Parse(msgReceive);
 
-
-        return new Frame();
     }
 
 
