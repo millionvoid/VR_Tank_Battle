@@ -86,6 +86,8 @@ public class TankHealth : MonoBehaviour
         gameObject.SetActive (false);
 
         // Unbind camera
-        m_camera.transform.SetParent(null);
+        if (m_camera) {
+            m_camera.transform.SetParent(null);
+        }
     }
 }

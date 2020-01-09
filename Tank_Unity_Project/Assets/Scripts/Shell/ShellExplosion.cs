@@ -30,21 +30,19 @@ public class ShellExplosion : MonoBehaviour
             Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody> ();
 
             // If they don't have a rigidbody, go on to the next collider.
-            if (!targetRigidbody)
-                continue;
-
-            // Add an explosion force.
-            targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
-
+            if (targetRigidbody) {
+                // Add an explosion force.
+                targetRigidbody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius);
+            }
             // Find the TankHealth script associated with the rigidbody.
-            TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth> ();
+            TankHealth targetHealth = colliders[i].GetComponent<TankHealth> ();
 
             // If there is no TankHealth script attached to the gameobject, go on to the next collider.
             if (!targetHealth)
                 continue;
 
             // Calculate the amount of damage the target should take based on it's distance from the shell.
-            float damage = CalculateDamage (targetRigidbody.position);
+            float damage = CalculateDamage (colliders[i].transform.position);
 
             // Deal this damage to the tank.
             targetHealth.TakeDamage (damage);
