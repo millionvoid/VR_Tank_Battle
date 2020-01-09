@@ -19,7 +19,7 @@ public class EnemyManager : MonoBehaviour {
         deathTime = new float[n];
         for(int i = 0; i < n; ++i) {
             var e = Instantiate(enemyPrefab, spawnPoints[i].position, spawnPoints[i].rotation) as GameObject;
-            e.GetComponent<NavMeshTest>().target = player.transform;
+            e.GetComponent<EnemyNavigation>().target = player.transform;
             enemys[i] = e;
             deathTime[i] = 0;
         }
