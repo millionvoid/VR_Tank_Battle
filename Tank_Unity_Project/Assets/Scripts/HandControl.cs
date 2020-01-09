@@ -32,11 +32,11 @@ public class HandControl : MonoBehaviour {
         setVisible(true);
         
         var palmPos = hand["palm_position"].AsArray;
-        Debug.Log("palm pos = " + palmPos[0] + ", " + palmPos[1] + ", " + palmPos[2]);
+        //Debug.Log("palm pos = " + palmPos[0] + ", " + palmPos[1] + ", " + palmPos[2]);
         float x = palmPos[0].AsFloat / 1000.0f;
         float y = palmPos[1].AsFloat / 1000.0f;
         float z = -palmPos[2].AsFloat / 1000.0f;
-        Debug.Log(string.Format("x = {0}, y = {1}, z = {2}", x, y, z));
+        //Debug.Log(string.Format("x = {0}, y = {1}, z = {2}", x, y, z));
         palm.transform.localPosition = new Vector3(x, y, z);
 
         var f = hand["fingers"].AsArray;

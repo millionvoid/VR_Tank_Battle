@@ -70,27 +70,29 @@ public class TankMovement : MonoBehaviour
         // Store the value of both input axes.
         m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
         m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
+
+        HandMove();
+
+        EngineAudio ();
+    }
+
+    private void HandMove() {
         JSONNode data = leapMotionListener.data;
         if (data == null)
             return;
-        
+
         JSONNode rightHand = null;
-        if (data["rightmost_hand"] != null && data["rightmost_hand"]["is_right"].AsBool)
-        {
+        if (data["rightmost_hand"] != null && data["rightmost_hand"]["is_right"].AsBool) {
             rightHand = data["rightmost_hand"];
-        }
-        else if (data["leftmost_hand"] != null && data["leftmost_hand"]["is_right"].AsBool)
-        {
+        } else if (data["leftmost_hand"] != null && data["leftmost_hand"]["is_right"].AsBool) {
             rightHand = data["leftmost_hand"];
         }
         if (rightHand == null)
             return;
-        JSONArray direction = rightHand["direction"].AsArray;
+        JSONArray direction = rightHand["palm_normal"].AsArray;
         //Debug.Log(data["rightmost_hand"]["direction"].AsArray);
         m_MovementInputValue = -direction[2].AsFloat;
         m_TurnInputValue = direction[0].AsFloat;
-
-        EngineAudio ();
     }
 
 

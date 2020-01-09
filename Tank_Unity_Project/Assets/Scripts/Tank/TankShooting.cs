@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using SimpleJSON;
 
 public class TankShooting : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class TankShooting : MonoBehaviour
     public Rigidbody m_Shell;                   // Prefab of the shell.
     public Rigidbody m_Bomb;
     public Transform m_FireTransform;           // A child of the tank where the shells are spawned.
+    public Transform m_HandBombTransform;
     public Slider m_AimSlider;                  // A child of the tank that displays the current launch force.
     public AudioSource m_ShootingAudio;         // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
     public AudioClip m_ChargingClip;            // Audio that plays when each shot is charging up.
@@ -16,7 +18,8 @@ public class TankShooting : MonoBehaviour
     public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
     public float m_BombColdDown = 1.0f;
     public float m_BombForce = 20f;
-    public LeapMotionListener LeapMotionListener;
+    public float m_HandBombForce = 10f;
+    public LeapMotionListener leapMotionListener;
 
     private string m_FireButton;                // The input axis that is used for launching shells.
     private string m_BombButton;
@@ -24,6 +27,9 @@ public class TankShooting : MonoBehaviour
     private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
     private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
     private float m_NextBombTime;
+
+    private Rigidbody grabBomb;
+
 
     private void OnEnable() {
         m_CurrentLaunchForce = m_MinLaunchForce;
@@ -59,13 +65,69 @@ public class TankShooting : MonoBehaviour
             Fire ();
         }
 
-        if(Input.GetButton(m_BombButton) && m_NextBombTime <= Time.time)
-        {
+        if(Input.GetButton(m_BombButton) && m_NextBombTime <= Time.time) {
             Bomb();
+        }
+
+        HandBomb();
+    }
+
+
+    private void HandBomb() {
+
+        JSONNode data = leapMotionListener.data;
+        if (data == null)
+            return;
+
+        JSONNode hand = null;
+        if (data["leftmost_hand"] != null && data["leftmost_hand"]["is_left"].AsBool) {
+            hand = data["leftmost_hand"];
+        } else if (data["rightmost_hand"] != null && data["rightmost_hand"]["is_left"].AsBool) {
+            hand = data["rightmost_hand"];
+        }
+        if (hand == null)
+            return;
+
+        //Debug.Log(string.Format("hand[\"grab_strength\"] = {0}" , hand["grab_strength"].AsFloat));
+
+        if (grabBomb == null) {
+            if (hand["grab_strength"].AsFloat < 0.3f) {
+                grabBomb = Instantiate(m_Bomb, m_HandBombTransform.position, m_HandBombTransform.rotation) as Rigidbody;
+                grabBomb.transform.parent = m_HandBombTransform;
+                var rb = grabBomb.GetComponent<Rigidbody>();
+                rb.useGravity = false;
+                rb.isKinematic = true;
+                grabBomb.rotation *= Quaternion.FromToRotation(Vector3.forward, new Vector3(
+                    hand["direction"][0].AsFloat,
+                    hand["direction"][1].AsFloat,
+                    -hand["direction"][2].AsFloat
+                    ));
+            }
+        } else {
+            grabBomb.position = m_HandBombTransform.position;
+            grabBomb.rotation = m_HandBombTransform.rotation * Quaternion.FromToRotation(Vector3.forward, new Vector3(
+                hand["direction"][0].AsFloat,
+                hand["direction"][1].AsFloat,
+                -hand["direction"][2].AsFloat
+            ));
+            if (hand["grab_strength"].AsFloat >= 0.98f) {
+                grabBomb.transform.parent = null;
+                grabBomb.GetComponent<BombExplosion>().StartCountDown();
+                var rb = grabBomb.GetComponent<Rigidbody>();
+                rb.useGravity = true;
+                rb.isKinematic = false;
+                rb.velocity = m_HandBombTransform.rotation * new Vector3(
+                    hand["direction"][0].AsFloat,
+                    hand["direction"][1].AsFloat,
+                    -hand["direction"][2].AsFloat
+                ) * m_HandBombForce;
+                Debug.Log(rb.velocity);
+                grabBomb = null;
+            }
         }
     }
 
-    private void Fire () {
+    private void Fire() {
         m_Fired = true;
 
         Rigidbody shellInstance =
@@ -84,6 +146,7 @@ public class TankShooting : MonoBehaviour
 
         Rigidbody bomb = Instantiate(m_Bomb, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
         bomb.velocity =  m_BombForce * m_FireTransform.forward;
+        bomb.gameObject.GetComponent<BombExplosion>().StartCountDown();
     }
 
 }

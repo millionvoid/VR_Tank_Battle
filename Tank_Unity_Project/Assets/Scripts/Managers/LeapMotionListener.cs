@@ -23,11 +23,13 @@ public class LeapMotionListener : MonoBehaviour {
     private const int BUFFER_SIZE = 8192;
     private byte[] receiveBuffer;
     public JSONNode data { get; private set; }
-    
+
+    private Thread serverThread;
+
     private void Start() {
         ThreadStart serverRef = new ThreadStart(InitializeServer);
         receiveBuffer = new byte[BUFFER_SIZE];
-        Thread serverThread = new Thread(serverRef);
+        serverThread = new Thread(serverRef);
         serverThread.Start();
     }
 
@@ -100,8 +102,10 @@ public class LeapMotionListener : MonoBehaviour {
         // TODO: convert this.receiveBuffer to Frame
         return JSON.Parse(msgReceive);
     }
-    
-    
+
+    private void OnDestroy() {
+        serverThread.Abort();
+    }
 
 
 

@@ -10,18 +10,23 @@ public class BombExplosion : MonoBehaviour
     public float m_MaxLifeTime = 2f;                    // The time in seconds before the shell is removed.
     public float m_ExplosionRadius = 5f;                // The maximum distance away from the explosion tanks can be and are still affected.
 
+    private bool m_Safe = true;
     private float m_ExplosionTime;
 
-    private void Start ()
-    {
-        // If it isn't destroyed by then, destroy the shell after it's lifetime.
-        // Destroy (gameObject, m_MaxLifeTime);
+    private void Awake() {
+        m_Safe = true;
+    }
+
+    public void StartCountDown() {
+        Debug.Log("StartCountDown");
         m_ExplosionTime = Time.time + m_MaxLifeTime;
+        m_Safe = false;
     }
 
     private void Update()
     {
-        if(Time.time >= m_ExplosionTime)
+        //Debug.Log(string.Format("m_Safe={0}, Time.time={1}, m_ExplosionTime={2}", m_Safe, Time.time, m_ExplosionTime));
+        if(!m_Safe && Time.time >= m_ExplosionTime)
         {
             Expolosion();
         }
