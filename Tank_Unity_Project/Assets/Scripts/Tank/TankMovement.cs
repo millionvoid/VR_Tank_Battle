@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SimpleJSON;
+using UnityEngine;
 
 public class TankMovement : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class TankMovement : MonoBehaviour
     public AudioClip m_EngineDriving;           // Audio to play when the tank is moving.
 	public float m_PitchRange = 0.2f;           // The amount by which the pitch of the engine noises can vary.
     public Rigidbody m_Rigidbody;              // Reference used to move the tank.
-
+    public LeapMotionListener leapMotionListener;
+    
     private string m_MovementAxisName;          // The name of the input axis for moving forward and back.
     private string m_TurnAxisName;              // The name of the input axis for turning.
     private float m_MovementInputValue;         // The current value of the movement input.
@@ -68,6 +70,25 @@ public class TankMovement : MonoBehaviour
         // Store the value of both input axes.
         m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
         m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
+        JSONNode data = leapMotionListener.data;
+        if (data == null)
+            return;
+        
+        JSONNode rightHand = null;
+        if (data["rightmost_hand"] != null && data["rightmost_hand"]["is_right"].AsBool)
+        {
+            rightHand = data["rightmost_hand"];
+        }
+        else if (data["leftmost_hand"] != null && data["leftmost_hand"]["is_right"].AsBool)
+        {
+            rightHand = data["leftmost_hand"];
+        }
+        if (rightHand == null)
+            return;
+        JSONArray direction = rightHand["direction"].AsArray;
+        //Debug.Log(data["rightmost_hand"]["direction"].AsArray);
+        m_MovementInputValue = -direction[2].AsFloat;
+        m_TurnInputValue = direction[0].AsFloat;
 
         EngineAudio ();
     }
@@ -116,6 +137,7 @@ public class TankMovement : MonoBehaviour
 
         // Apply this movement to the rigidbody's position.
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+        //m_Rigidbody.AddForce(movement);
     }
 
 

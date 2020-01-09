@@ -13,7 +13,7 @@ using Leap;
 public class LeapMotionListener : MonoBehaviour {
 
     public String listenAddress = "127.0.0.1";
-    public int listenPort = 8888;
+    public int listenPort = 7777;
     //public GameObject label;
     //public GameObject cube;
     //public JSONNode data;
@@ -68,7 +68,17 @@ public class LeapMotionListener : MonoBehaviour {
             mut.WaitOne();
             //data = JSON.Parse(msgReceive);
             msgReceive = Encoding.ASCII.GetString(receiveBuffer, 0, count);
-            data = ParseReceiveData();
+            JSONNode tmpData = null;
+            try
+            {
+                tmpData = ParseReceiveData();
+                data = tmpData;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("error when parsing JSON: " + e);
+            }
+
             mut.ReleaseMutex();
 
             //Debug.Log("fps = " + data["fps"]);
@@ -89,8 +99,9 @@ public class LeapMotionListener : MonoBehaviour {
 
         // TODO: convert this.receiveBuffer to Frame
         return JSON.Parse(msgReceive);
-
     }
+    
+    
 
 
 

@@ -16,6 +16,7 @@ public class TankShooting : MonoBehaviour
     public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
     public float m_BombColdDown = 1.0f;
     public float m_BombForce = 20f;
+    public LeapMotionListener LeapMotionListener;
 
     private string m_FireButton;                // The input axis that is used for launching shells.
     private string m_BombButton;

@@ -17,6 +17,7 @@ def to_json(frame):
 		leftmost_hand_dic["is_valid"]=leftmost_hand.is_valid
 		leftmost_hand_dic["pinch_strength"]=leftmost_hand.pinch_strength
 		leftmost_hand_dic["grab_strength"]=leftmost_hand.grab_strength
+		leftmost_hand_dic["direction"]=leftmost_hand.direction.to_float_array()
 		leftmost_hand_dic["palm_normal"]=leftmost_hand.palm_normal.to_float_array()
 		leftmost_hand_dic["palm_position"]=leftmost_hand.palm_position.to_float_array()
 		leftmost_hand_dic["palm_velocity"]=leftmost_hand.palm_velocity.to_float_array()
@@ -47,6 +48,7 @@ def to_json(frame):
 		rightmost_hand_dic["is_valid"]=rightmost_hand.is_valid
 		rightmost_hand_dic["pinch_strength"]=rightmost_hand.pinch_strength
 		rightmost_hand_dic["grab_strength"]=rightmost_hand.grab_strength
+		rightmost_hand_dic["direction"]=rightmost_hand.direction.to_float_array()
 		rightmost_hand_dic["palm_normal"]=rightmost_hand.palm_normal.to_float_array()
 		rightmost_hand_dic["palm_position"]=rightmost_hand.palm_position.to_float_array()
 		rightmost_hand_dic["palm_velocity"]=rightmost_hand.palm_velocity.to_float_array()
